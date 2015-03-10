@@ -104,15 +104,6 @@ $.extend(Player.prototype, {
     this.socket.emit('player updated', this.toSocket());
   },
 
-  unsetAllDirections: function () {
-    this.direction.up = 0;
-    this.direction.down = 0;
-    this.direction.left = 0;
-    this.direction.right = 0;
-    this.setDelta();
-    this.socket.emit('player updated', this.toSocket());
-  },
-
   unsetDirection: function (code) {
     this.direction[Player.direction(code)] = 0;
     this.setDelta();

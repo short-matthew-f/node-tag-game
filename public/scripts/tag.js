@@ -121,10 +121,6 @@ $.extend(Tag.prototype, {
         thisTag.player.unsetDirection( code );
       }
     });
-
-    $(window).on('blur', function (event) {
-      thisTag.player.unsetAllDirections();
-    });
   },
 
   enroll: function () {
