@@ -1,4 +1,5 @@
 var players = {};
+var gameLoopID;
 var currentItID;
 
 var express = require('express');
@@ -24,6 +25,11 @@ io.on('connection', function(socket) {
   socket.on('player enroll', function () {
     var _player = makePlayer(socket.id);
     players[socket.id] = _player;
+
+    if (gameLoopID == undefined) {
+      gameLoopID = setInterval(updateIt, 8000);
+    };
+
     io.sockets.emit('player enroll', _player);
   });
 
@@ -44,11 +50,15 @@ io.on('connection', function(socket) {
 
   socket.on('disconnect', function () {
     delete players[socket.id];
+
+    if (Object.keys(players).length == 0) {
+      clearInterval( gameLoopID );
+      gameLoopID = undefined;
+    };
+
     io.sockets.emit('player unenroll', socket.id);
   });
 });
-
-setInterval(updateIt, 10000);
 
 function updateIt () {
   if (currentItID) {
