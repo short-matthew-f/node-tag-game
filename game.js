@@ -42,6 +42,7 @@ io.on('connection', function(socket) {
     };
 
     io.sockets.emit('player enroll', _player);
+    io.sockets.emit('player isit', currentItID);
   });
 
   socket.on('player updated', function (_player) {

@@ -6,36 +6,17 @@
     <script src="scripts/jquery.js"></script>
     <script src="scripts/player.js"></script>
     <script src="scripts/tag.js"></script>
-    <style>
-      canvas {
-        display: block;
-        border: 1px solid black;
-        background: lightyellow;
-        margin: 12px auto;
-      }
-
-      h1 {
-        text-align: center;
-      }
-
-      ul {
-        width: 400px;
-        display: block;
-        margin: 12px auto;
-        list-style: none;
-      }
-    </style>
+    <link rel="stylesheet" href="stylesheets/index.css">
   </head>
   <body>
-    <h1>Welcome to Freeze Tag</h1>
-
+    <h1>Freeze Tag</h1>
     <canvas id="game" width="800" height="500"></canvas>
-
     <ul>
-      <li>Use arrow keys to move.</li>
-      <li>You are blue, opponents are white.</li>
-      <li>Whomever is red is <strong>it</strong>.</li>
-      <li>If you get tagged, you are frozen until the next player is it.</li>
+      <li>Arrow keys move you</li>
+      <li>You: <i class="you"></i></li>
+      <li>Them: <i class="them"></i></li>
+      <li>IT: <i class="it"></i></li>
+      <li>There is a new IT every 5 seconds</li>
     </ul>
 
     <script>

@@ -104,7 +104,7 @@ $.extend(Tag.prototype, {
       40: true
     }
 
-    $('body').on("keydown", function (event) {
+    $(window).on("keydown", function (event) {
       var code = event.keyCode;
 
       if (moveDirs[code]) {
@@ -113,13 +113,17 @@ $.extend(Tag.prototype, {
       }
     });
 
-    $('body').on("keyup", function (event) {
+    $(window).on("keyup", function (event) {
       var code = event.keyCode;
 
       if (moveDirs[code]) {
         event.preventDefault();
         thisTag.player.unsetDirection( code );
       }
+    });
+
+    $(window).on('blur', function (event) {
+      thisTag.player.unsetAllDirections();
     });
   },
 

@@ -61,12 +61,12 @@ $.extend(Player.prototype, {
     var base, diag;
 
     if (this.isIt) {
-      base = 6;
-      diag = 4;
+      base = 7;
+      diag = 5;
     } else {
       base = 5;
       diag = 3;
-    }
+    };
 
     if (!this.isOut) {
       if (this.dx != 0 || this.dy != 0) {
@@ -77,7 +77,7 @@ $.extend(Player.prototype, {
           this.x += base * this.dx;
           this.y += base * this.dy;
         }
-      }
+      };
 
       this.x = Math.max(20, Math.min(this.x, 780));
       this.y = Math.max(20, Math.min(this.y, 480));
@@ -100,6 +100,15 @@ $.extend(Player.prototype, {
 
   setDirection: function (code) {
     this.direction[Player.direction(code)] = 1;
+    this.setDelta();
+    this.socket.emit('player updated', this.toSocket());
+  },
+
+  unsetAllDirections: function () {
+    this.direction.up = 0;
+    this.direction.down = 0;
+    this.direction.left = 0;
+    this.direction.right = 0;
     this.setDelta();
     this.socket.emit('player updated', this.toSocket());
   },
