@@ -23,15 +23,8 @@ io.on('connection', function(socket) {
   });
 
   socket.on('player enroll', function () {
-    console.log('player is trying to connect');
-
     var _player = makePlayer(socket.id);
     players[socket.id] = _player;
-
-    if (gameLoopID == undefined) {
-      gameLoopID = setInterval(updateIt, 8000);
-    };
-
     io.sockets.emit('player enroll', _player);
   });
 
@@ -52,15 +45,11 @@ io.on('connection', function(socket) {
 
   socket.on('disconnect', function () {
     delete players[socket.id];
-
-    if (Object.keys(players).length == 0) {
-      clearInterval( gameLoopID );
-      gameLoopID = undefined;
-    };
-
     io.sockets.emit('player unenroll', socket.id);
   });
 });
+
+setInterval(updateIt, 8000);
 
 function updateIt () {
   if (currentItID) {

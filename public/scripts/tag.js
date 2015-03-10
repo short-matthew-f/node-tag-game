@@ -60,9 +60,6 @@ _.extend(Tag.prototype, {
     });
 
     this.socket.on('player isnotit', function (_id) {
-      console.log(_id);
-      console.log(thisTag.players);
-
       thisTag.players[_id].setIt(false);
     });
 
