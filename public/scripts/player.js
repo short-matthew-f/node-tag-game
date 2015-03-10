@@ -58,14 +58,24 @@ $.extend(Player.prototype, {
   },
 
   tick: function () {
+    var base, diag;
+
+    if (this.isIt) {
+      base = 6;
+      diag = 4;
+    } else {
+      base = 5;
+      diag = 3;
+    }
+
     if (!this.isOut) {
       if (this.dx != 0 || this.dy != 0) {
         if (this.dx != 0 && this.dy != 0) {
-          this.x += 3 * this.dx;
-          this.y += 3 * this.dy;
+          this.x += diag * this.dx;
+          this.y += diag * this.dy;
         } else {
-          this.x += 5 * this.dx;
-          this.y += 5 * this.dy;
+          this.x += base * this.dx;
+          this.y += base * this.dy;
         }
       }
 
