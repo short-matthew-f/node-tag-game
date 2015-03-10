@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>Socket.IO chat</title>
+    <title>Freeze Tag</title>
     <script src="/socket.io/socket.io.js"></script>
     <script src="scripts/jquery.js"></script>
     <script src="scripts/player.js"></script>
@@ -13,17 +13,39 @@
         background: lightyellow;
         margin: 48px auto;
       }
+
+      h1 {
+        text-align: center;
+      }
+
+      ul {
+        width: 400px;
+        display: block;
+        margin: 24px auto;
+        list-style: none;
+      }
     </style>
   </head>
   <body>
+    <h1>Welcome to Freeze Tag</h1>
+
     <canvas id="game" width="800" height="500"></canvas>
 
+    <ul>
+      <li>Use arrow keys to move.</li>
+      <li>You are blue, opponents are white.</li>
+      <li>Whomever is red is <strong>it</strong>.</li>
+      <li>If you get tagged, you are frozen until the next player is it.</li>
+    </ul>
+
     <script>
-      var canvas = document.getElementById('game');
-      var context = canvas.getContext("2d");
-      var socket = io();
-      var tag = new Tag(context, socket);
-      tag.enroll();
+      $(function () {
+        window.canvas = document.getElementById('game');
+        window.context = canvas.getContext("2d");
+        window.socket = io();
+        window.tag = new Tag(context, socket);
+        tag.enroll();
+      });
     </script>
   </body>
 </html>
