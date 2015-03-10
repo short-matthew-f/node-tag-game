@@ -41,8 +41,10 @@ io.on('connection', function(socket) {
   });
 });
 
-http.listen(process.env.port || 3000, function(){
-  console.log('listening on *:3000');
+var port = process.env.port || 3000;
+
+http.listen(port, function(){
+  console.log('listening on *:' + port);
 });
 
 setInterval(updateIt, 10000);
