@@ -18,7 +18,7 @@ _.extend(Tag.prototype, {
 
     setInterval(function () {
       thisTag.update();
-    }, 30);
+    }, 15);
   },
 
   setSockets: function () {

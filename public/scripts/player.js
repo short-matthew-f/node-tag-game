@@ -13,7 +13,7 @@ function Player (_player, context, socket) {
     down  : 0
   };
 
-  this.speed    = 5;
+  this.speed    = 3;
   this.delta    = { x: 0, y: 0 };
   this.velocity = { x: 0, y: 0 };
   this.radius   = 16;
