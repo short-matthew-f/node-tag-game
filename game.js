@@ -41,7 +41,7 @@ io.on('connection', function(socket) {
   });
 });
 
-http.listen(3000, function(){
+http.listen(process.env.port || 3000, function(){
   console.log('listening on *:3000');
 });
 
@@ -51,7 +51,7 @@ function updateIt () {
   if (currentItID) {
     io.sockets.emit('player isnotit', currentItID);
   };
-  
+
   currentItID = chooseNextItID();
   io.sockets.emit('player isit', currentItID);
   io.sockets.emit('tag newit');
