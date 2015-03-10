@@ -13,7 +13,7 @@ function Player (_player, context, socket) {
     down  : 0
   };
 
-  this.speed    = 3;
+  this.speed    = 5;
   this.delta    = { x: 0, y: 0 };
   this.velocity = { x: 0, y: 0 };
   this.radius   = 16;
@@ -61,21 +61,21 @@ _.extend(Player.prototype, {
   },
 
   setVelocity: function () {
-    if (
-      (this.delta.x == 0 && this.delta.y == 0) ||
-       this.isOut
-    ) {
+    if ( (this.delta.x == 0 && this.delta.y == 0) || this.isOut) {
       this.velocity.x = 0;
       this.velocity.y = 0;
     } else {
       var x = this.delta.x, y = this.delta.y;
       var l = Math.sqrt(x * x + y * y);
-      this.velocity.x = this.delta.x * (this.speed / l);
-      this.velocity.y = this.delta.y * (this.speed / l);
+
+      this.velocity.x = Math.round( this.delta.x * (this.speed / l) );
+      this.velocity.y = Math.round( this.delta.y * (this.speed / l) );
     };
   },
 
   tick: function () {
+    this.setVelocity();
+
     this.x += this.velocity.x;
     this.y += this.velocity.y;
 
@@ -93,11 +93,6 @@ _.extend(Player.prototype, {
       delta: {
         x: this.delta.x,
         y: this.delta.y
-      },
-
-      velocity: {
-        x: this.velocity.x,
-        y: this.velocity.y
       }
     };
   },
@@ -105,16 +100,12 @@ _.extend(Player.prototype, {
   setDirection: function (code) {
     this.direction[Player.direction(code)] = 1;
     this.setDelta();
-    this.setVelocity();
-
     this.socket.emit('player updated', this.toSocket());
   },
 
   unsetDirection: function (code) {
     this.direction[Player.direction(code)] = 0;
     this.setDelta();
-    this.setVelocity();
-
     this.socket.emit('player updated', this.toSocket());
   },
 

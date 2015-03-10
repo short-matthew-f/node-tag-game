@@ -18,7 +18,7 @@ _.extend(Tag.prototype, {
 
     setInterval(function () {
       thisTag.update();
-    }, 15);
+    }, 30);
   },
 
   setSockets: function () {
@@ -113,9 +113,12 @@ _.extend(Tag.prototype, {
 
       if (keys.length > 0) {
         $(keys).each(function (index, id) {
-          var player = new Player(_players[id], thisTag.context, thisTag.socket);
-
-          thisTag.add( player );
+          if (thisTag.players[id]) {
+            thisTag.updatePlayer( player );
+          } else {
+            var player = new Player(_players[id], thisTag.context, thisTag.socket);
+            thisTag.add( player );
+          }
         });
       };
 
@@ -129,7 +132,6 @@ _.extend(Tag.prototype, {
     player.x = _player.x;
     player.y = _player.y;
     player.delta = _player.delta;
-    player.velocity = _player.velocity;
   },
 
   add: function (player) {

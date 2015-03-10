@@ -1,5 +1,5 @@
 var players = {};
-var gameLoopID;
+var gameLoopID, tagLoopID;
 var currentItID;
 
 var express = require('express');
@@ -34,8 +34,8 @@ io.on('connection', function(socket) {
     players[socket.id] = _player;
 
     if (gameLoopID == undefined) {
-      console.log('first user joined game');
-      gameLoopID = setInterval(updateIt, 8000);
+      gameLoopID = setInterval(emitPlayers, 15);
+      tagLoopID = setInterval(updateIt, 8000);
     };
 
     io.sockets.emit('player enroll', _player);
@@ -48,8 +48,6 @@ io.on('connection', function(socket) {
     player.y = _player.y;
     player.delta = _player.delta;
     player.velocity = _player.velocity;
-
-    io.sockets.emit('tag update', _player);
   });
 
   socket.on('player isout', function (_id) {
@@ -60,14 +58,18 @@ io.on('connection', function(socket) {
     delete players[socket.id];
 
     if (Object.keys(players).length == 0) {
+      clearInterval( tagLoopID );
       clearInterval( gameLoopID );
-      console.log('last user exited');
-      gameLoopID = undefined;
+      tagLoopID = gameLoopID = undefined;
     };
 
     io.sockets.emit('player unenroll', socket.id);
   });
 });
+
+function emitPlayers () {
+  io.sockets.emit('player list', players);
+};
 
 function updateIt () {
   if (currentItID) {
@@ -77,7 +79,7 @@ function updateIt () {
   currentItID = chooseNextItID();
   io.sockets.emit('player isit', currentItID);
   io.sockets.emit('tag newit');
-}
+};
 
 function chooseNextItID () {
   var keys = Object.keys(players);
@@ -118,8 +120,7 @@ function makePlayer (id) {
     id: id,
     x: pos[0],
     y: pos[1],
-    delta: { x: 0, y: 0 },
-    velocity: { x: 0, y: 0 }
+    delta: { x: 0, y: 0 }
   };
 
   return _player;
