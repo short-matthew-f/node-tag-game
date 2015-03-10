@@ -45,7 +45,7 @@ io.on('connection', function(socket) {
   });
 
   socket.on('player updated', function (_player) {
-    var player = players[socket.id]
+    var player = players[_player.id]
 
     player.x = _player.x;
     player.y = _player.y;

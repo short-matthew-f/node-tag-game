@@ -24,6 +24,24 @@ $.extend(Tag.prototype, {
   setSockets: function () {
     var thisTag = this;
 
+    this.socket.on('player list', function (_players) {
+      var keys = Object.keys(_players);
+
+      if (keys.length > 0) {
+        $(keys).each(function (index, id) {
+          if (thisTag.players[id]) {
+            if (thisTag.player.id != id) {
+              thisTag.updatePlayer( _players[id] );
+            };
+          } else {
+            var player = new Player(_players[id], thisTag.context, thisTag.socket);
+            thisTag.add( player );
+          }
+        });
+      };
+    });
+
+
     this.socket.on('tag update', function (_player) {
       thisTag.updatePlayer(_player);
     });
@@ -46,13 +64,15 @@ $.extend(Tag.prototype, {
         thisTag.startUpdating();
       };
 
-      thisTag.add( player );
-      $(thisTag).trigger('change');
+      if (thisTag.player) {
+        thisTag.add( player );
+      } else {
+        thisTag.socket.emit('player list');
+      }
     });
 
     this.socket.on('player unenroll', function (_id) {
       delete thisTag.players[_id];
-      $(thisTag).trigger('change');
     });
 
     this.socket.on('player isit', function (_id) {
@@ -79,11 +99,6 @@ $.extend(Tag.prototype, {
       40: true
     }
 
-    $(thisTag).on('change', function () {
-      thisTag.clear();
-      thisTag.render();
-    });
-
     $('body').on("keydown", function (event) {
       var code = event.keyCode;
 
@@ -104,27 +119,6 @@ $.extend(Tag.prototype, {
   },
 
   enroll: function () {
-    var thisTag = this;
-
-    socket.emit('player list');
-
-    socket.on('player list', function (_players) {
-      var keys = Object.keys(_players);
-
-      if (keys.length > 0) {
-        $(keys).each(function (index, id) {
-          if (thisTag.players[id]) {
-            if (thisTag.player.id != id) {
-              thisTag.updatePlayer( _players[id] );
-            };
-          } else {
-            var player = new Player(_players[id], thisTag.context, thisTag.socket);
-            thisTag.add( player );
-          }
-        });
-      };
-    })
-
     socket.emit('player enroll');
   },
 
@@ -138,10 +132,6 @@ $.extend(Tag.prototype, {
 
   add: function (player) {
     this.players[player.id] = player;
-  },
-
-  remove: function (player) {
-    delete this.players[player.id];
   },
 
   render: function () {
@@ -179,12 +169,13 @@ $.extend(Tag.prototype, {
 
     if (player.isIt) {
       $(ids).each(function (index, id) {
-        var other = thisTag.players[id];
-
-        if (player.id != id && !other.isOut && player.collide(other)) {
-          player.tagCount += 1;
-          thisTag.socket.emit('player isout', other.id);
-        };
+        if (player.id != id) {
+          var other = thisTag.players[id];
+          if (!other.isOut && player.collide(other)) {
+            player.tagCount += 1;
+            thisTag.socket.emit('player isout', other.id);
+          };
+        }
       });
     };
 
