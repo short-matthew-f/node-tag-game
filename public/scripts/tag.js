@@ -25,22 +25,34 @@ $.extend(Tag.prototype, {
     var thisTag = this;
 
     this.socket.on('player list', function (_players) {
-      var keys = Object.keys(_players);
+      var ids = Object.keys(_players);
 
-      if (keys.length > 0) {
-        $(keys).each(function (index, id) {
-          if (thisTag.players[id]) {
-            if (thisTag.player.id != id) {
-              thisTag.updatePlayer( _players[id] );
-            };
+      if (ids.length > 0) {
+        $(ids).each(function (index, id) {
+          if (thisTag.player == undefined) {
+            if (thisTag.players[id]) {
+              thisTag.updatePlayer( _players[id] )
+            } else {
+              var player = new Player(_players[id], thisTag.context, thisTag.socket);
+
+              thisTag.add( player );
+            }
           } else {
-            var player = new Player(_players[id], thisTag.context, thisTag.socket);
-            thisTag.add( player );
-          }
+            if (thisTag.players[id]) {
+              if (id != thisTag.player.id) {
+                thisTag.updatePlayer( _players[id] )
+              }
+            } else {
+              if (id == thisTag.player.id) {
+                thisTag.add( thisTag.player );
+              } else {
+                thisTag.add( new Player(_players[id], thisTag.context, thisTag.socket) );
+              }
+            }
+          };
         });
       };
     });
-
 
     this.socket.on('tag update', function (_player) {
       thisTag.updatePlayer(_player);
@@ -55,20 +67,14 @@ $.extend(Tag.prototype, {
     })
 
     this.socket.on('player enroll', function (_player) {
-      var player = new Player( _player, thisTag.context, thisTag.socket );
-
       // if the player that enrolled is me, set extra stuff
-      if (thisTag.socket.id == player.id) {
-        thisTag.player = player;
-        player.setPlayer( true );
+      if (thisTag.socket.id == _player.id) {
+        thisTag.player = new Player( _player, thisTag.context, thisTag.socket );
+        thisTag.player.setPlayer( true );
         thisTag.startUpdating();
       };
 
-      if (thisTag.player) {
-        thisTag.add( player );
-      } else {
-        thisTag.socket.emit('player list');
-      }
+      thisTag.socket.emit('player list');
     });
 
     this.socket.on('player unenroll', function (_id) {
