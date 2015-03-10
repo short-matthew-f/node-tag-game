@@ -23,6 +23,8 @@ io.on('connection', function(socket) {
   });
 
   socket.on('player enroll', function () {
+    console.log('player is trying to connect');
+
     var _player = makePlayer(socket.id);
     players[socket.id] = _player;
 
