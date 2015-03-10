@@ -20,7 +20,10 @@
     <script>
       var canvas = document.getElementById('game');
       var context = canvas.getContext("2d");
-      var socket = io.connect("https://node-tag-game.herokuapp.com/");
+      var socket = io({
+        'transports': ["xhr-polling"],
+        'polling duration': 10
+      });
 
       var tag = new Tag(context, socket);
 
