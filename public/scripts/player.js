@@ -2,9 +2,11 @@ function Player (_player, context, socket) {
   this.context  = context;
   this.socket   = socket;
 
-  this.x  = _player.x;
-  this.y  = _player.y;
-  this.id = _player.id;
+  this.x           = _player.x;
+  this.y           = _player.y;
+  this.id          = _player.id;
+  this.tagCount    = _player.tagCount || 0;
+  this.taggedCount = _player.taggedCount || 0;
 
   this.direction = {
     left  : 0,
@@ -20,10 +22,7 @@ function Player (_player, context, socket) {
 
   this.isPlayer = false;
   this.isIt     = false;
-  this.itOut    = false;
-
-  this.tagCount    = 0;
-  this.taggedCount = 0;
+  this.isOut    = false;
 };
 
 $.extend(Player, {

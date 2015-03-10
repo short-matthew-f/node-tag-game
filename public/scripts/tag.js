@@ -91,7 +91,6 @@ $.extend(Tag.prototype, {
 
     this.socket.on('player isout', function (_id) {
       thisTag.players[_id].setOut(true);
-      thisTag.players[_id].taggedCount += 1;
     });
   },
 
@@ -131,9 +130,10 @@ $.extend(Tag.prototype, {
   updatePlayer: function (_player) {
     var player = this.players[_player.id];
 
-    player.x = _player.x;
-    player.y = _player.y;
-    player.delta = _player.delta;
+    player.x  = _player.x;
+    player.y  = _player.y;
+    player.dx = _player.dx;
+    player.dy = _player.dy;
   },
 
   add: function (player) {
@@ -178,12 +178,24 @@ $.extend(Tag.prototype, {
         if (player.id != id) {
           var other = thisTag.players[id];
           if (!other.isOut && player.collide(other)) {
+            other.setOut(true);
             player.tagCount += 1;
             thisTag.socket.emit('player isout', other.id);
           };
         }
       });
-    };
+    } else if (!player.isOut) {
+      $(ids).each(function (index, id) {
+        if (player.id != id) {
+          var other = thisTag.players[id];
+          if (other.isIt && player.collide(other)) {
+            player.setOut(true);
+            player.taggedCount += 1;
+            thisTag.socket.emit('player isout', player.id);
+          };
+        }
+      });
+    }
 
     this.clear();
     this.render();
