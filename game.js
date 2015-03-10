@@ -3,15 +3,17 @@ var currentItID;
 
 var express = require('express');
 var app = express();
+var server = require('http').Server(app);
+var io = require('socket.io')(server, {
+  'transports': ["xhr-polling"],
+  'polling duration': 10
+});
 
 app.set('port', (process.env.port || 3000));
 app.use(express.static(__dirname + '/public'));
 
-var io = require('socket.io')(http);
-
-io.configure(function () {
-  io.set("transports", ["xhr-polling"]);
-  io.set("polling duration", 20);
+server.listen(app.get('port'), function() {
+  console.log("Node app is running at localhost:" + app.get('port'));
 });
 
 io.on('connection', function(socket) {
@@ -44,10 +46,6 @@ io.on('connection', function(socket) {
     delete players[socket.id];
     io.sockets.emit('player unenroll', socket.id);
   });
-});
-
-app.listen(app.get('port'), function() {
-  console.log("Node app is running at localhost:" + app.get('port'));
 });
 
 setInterval(updateIt, 10000);
