@@ -34,8 +34,11 @@ io.on('connection', function(socket) {
     players[socket.id] = _player;
 
     if (gameLoopID == undefined) {
-      gameLoopID = setInterval(emitPlayers, 15);
-      tagLoopID = setInterval(updateIt, 8000);
+      gameLoopID = setInterval(function () {
+        io.sockets.emit('player list', players);
+      }, 30);
+
+      tagLoopID = setInterval(updateIt, 5000);
     };
 
     io.sockets.emit('player enroll', _player);
@@ -46,8 +49,8 @@ io.on('connection', function(socket) {
 
     player.x = _player.x;
     player.y = _player.y;
-    player.delta = _player.delta;
-    player.velocity = _player.velocity;
+    player.dx = _player.dx;
+    player.dy = _player.dy;
   });
 
   socket.on('player isout', function (_id) {
@@ -66,10 +69,6 @@ io.on('connection', function(socket) {
     io.sockets.emit('player unenroll', socket.id);
   });
 });
-
-function emitPlayers () {
-  io.sockets.emit('player list', players);
-};
 
 function updateIt () {
   if (currentItID) {
@@ -120,7 +119,8 @@ function makePlayer (id) {
     id: id,
     x: pos[0],
     y: pos[1],
-    delta: { x: 0, y: 0 }
+    dx: 0,
+    dy: 0
   };
 
   return _player;

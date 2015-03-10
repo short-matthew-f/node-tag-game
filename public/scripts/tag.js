@@ -12,7 +12,7 @@ function Tag (context, socket) {
   this.setListeners();
 };
 
-_.extend(Tag.prototype, {
+$.extend(Tag.prototype, {
   startUpdating: function () {
     var thisTag = this;
 
@@ -114,16 +114,18 @@ _.extend(Tag.prototype, {
       if (keys.length > 0) {
         $(keys).each(function (index, id) {
           if (thisTag.players[id]) {
-            thisTag.updatePlayer( player );
+            if (thisTag.player.id != id) {
+              thisTag.updatePlayer( _players[id] );
+            };
           } else {
             var player = new Player(_players[id], thisTag.context, thisTag.socket);
             thisTag.add( player );
           }
         });
       };
-
-      socket.emit('player enroll');
     })
+
+    socket.emit('player enroll');
   },
 
   updatePlayer: function (_player) {
@@ -179,11 +181,7 @@ _.extend(Tag.prototype, {
       $(ids).each(function (index, id) {
         var other = thisTag.players[id];
 
-        if (
-          player.id != id &&
-          !other.isOut &&
-          player.collide(other)
-        ) {
+        if (player.id != id && !other.isOut && player.collide(other)) {
           player.tagCount += 1;
           thisTag.socket.emit('player isout', other.id);
         };

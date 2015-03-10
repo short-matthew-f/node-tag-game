@@ -14,8 +14,8 @@ function Player (_player, context, socket) {
   };
 
   this.speed    = 5;
-  this.delta    = { x: 0, y: 0 };
-  this.velocity = { x: 0, y: 0 };
+  this.dx       = 0;
+  this.dy       = 0;
   this.radius   = 16;
 
   this.isPlayer = false;
@@ -26,7 +26,7 @@ function Player (_player, context, socket) {
   this.taggedCount = 0;
 };
 
-_.extend(Player, {
+$.extend(Player, {
   direction: function (code) {
     return {
       37: 'left',
@@ -37,7 +37,7 @@ _.extend(Player, {
   }
 });
 
-_.extend(Player.prototype, {
+$.extend(Player.prototype, {
   setIt: function (val) {
     this.isIt = val;
     return this;
@@ -54,46 +54,38 @@ _.extend(Player.prototype, {
   },
 
   setDelta: function () {
-    this.delta = {
-      x: -this.direction.left + this.direction.right,
-      y: -this.direction.up + this.direction.down
-    };
-  },
-
-  setVelocity: function () {
-    if ( (this.delta.x == 0 && this.delta.y == 0) || this.isOut) {
-      this.velocity.x = 0;
-      this.velocity.y = 0;
-    } else {
-      var x = this.delta.x, y = this.delta.y;
-      var l = Math.sqrt(x * x + y * y);
-
-      this.velocity.x = Math.round( this.delta.x * (this.speed / l) );
-      this.velocity.y = Math.round( this.delta.y * (this.speed / l) );
-    };
+    this.dx = this.direction.right - this.direction.left;
+    this.dy = this.direction.down - this.direction.up;
   },
 
   tick: function () {
-    this.setVelocity();
+    if (!this.isOut) {
+      if (this.dx != 0 || this.dy != 0) {
+        if (this.dx != 0 && this.dy != 0) {
+          this.x += 3 * this.dx;
+          this.y += 3 * this.dy;
+        } else {
+          this.x += 5 * this.dx;
+          this.y += 5 * this.dy;
+        }
+      }
 
-    this.x += this.velocity.x;
-    this.y += this.velocity.y;
+      this.x = Math.max(20, Math.min(this.x, 780));
+      this.y = Math.max(20, Math.min(this.y, 480));
 
-    this.x = Math.max(20, Math.min(this.x, 780));
-    this.y = Math.max(20, Math.min(this.y, 480));
+      if (this.id == this.socket.id) {
+        this.socket.emit('player updated', this.toSocket());
+      };
+    };
   },
 
   toSocket: function () {
     return {
       id: this.id,
-
       x: this.x,
       y: this.y,
-
-      delta: {
-        x: this.delta.x,
-        y: this.delta.y
-      }
+      dx: this.dx,
+      dy: this.dy
     };
   },
 
