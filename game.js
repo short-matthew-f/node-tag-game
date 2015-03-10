@@ -6,8 +6,15 @@ var express = require('express');
 var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server, {
-  'transports': ["xhr-polling"],
-  'polling duration': 10
+  'transports': [
+    'websocket',
+    'flashsocket',
+    'htmlfile',
+    'xhr-polling',
+    'jsonp-polling',
+    'polling'
+  ],
+  'polling': 10
 });
 
 app.set('port', (process.env.PORT || 5000));
@@ -25,6 +32,12 @@ io.on('connection', function(socket) {
   socket.on('player enroll', function () {
     var _player = makePlayer(socket.id);
     players[socket.id] = _player;
+
+    if (gameLoopID == undefined) {
+      console.log('first user joined game');
+      gameLoopID = setInterval(updateIt, 8000);
+    };
+
     io.sockets.emit('player enroll', _player);
   });
 
@@ -45,11 +58,16 @@ io.on('connection', function(socket) {
 
   socket.on('disconnect', function () {
     delete players[socket.id];
+
+    if (Object.keys(players).length == 0) {
+      clearInterval( gameLoopID );
+      console.log('last user exited');
+      gameLoopID = undefined;
+    };
+
     io.sockets.emit('player unenroll', socket.id);
   });
 });
-
-setInterval(updateIt, 8000);
 
 function updateIt () {
   if (currentItID) {

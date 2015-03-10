@@ -154,9 +154,9 @@ _.extend(Tag.prototype, {
   showScore: function () {
     var c = this.context;
 
-    c.font = "16px sans-serif";
-    c.fillStyle = 'black';
-    c.fillText("Score: up - " + this.player.tagCount + " down - " + this.player.taggedCount, 8, 486);
+    c.font = "24px sans-serif";
+    c.fillStyle = 'navy';
+    c.fillText("Score: up - " + this.player.tagCount + " down - " + this.player.taggedCount, 8, 490);
   },
 
   clear: function () {

@@ -9,8 +9,10 @@
     <script src="scripts/tag.js"></script>
     <style>
       canvas {
+        display: block;
         border: 1px solid black;
-        background: #ddd;
+        background: lightyellow;
+        margin: 48px auto;
       }
     </style>
   </head>
@@ -20,13 +22,8 @@
     <script>
       var canvas = document.getElementById('game');
       var context = canvas.getContext("2d");
-      var socket = io("https://node-tag-game.herokuapp.com/", {
-        'transports': ["xhr-polling"],
-        'polling duration': 10
-      });
-
+      var socket = io();
       var tag = new Tag(context, socket);
-
       tag.enroll();
     </script>
   </body>
