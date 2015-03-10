@@ -1,12 +1,13 @@
 {
-  "name": "Tag On Node",
+  "name": "TagOnNode",
   "version": "0.0.1",
+  "main": "game.js",
   "description": "Fun little game which lets users play tag",
   "dependencies": {
     "express": "^4.12.2",
     "socket.io": "^1.3.5"
   },
   "scripts": {
-    "start": "game.js"
+    "start": "node game.js"
   }
 }
