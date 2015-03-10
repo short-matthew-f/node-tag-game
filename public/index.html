@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="scripts/jquery.js"></script>
+    <script src="scripts/underscore.js"></script>
+    <script src="scripts/player.js"></script>
+    <script src="scripts/tag.js"></script>
+    <style>
+      canvas {
+        border: 1px solid black;
+        background: #ddd;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="game" width="800" height="500"></canvas>
+
+    <script>
+      var canvas = document.getElementById('game');
+      var context = canvas.getContext("2d");
+      var socket = io();
+
+      var tag = new Tag(context, socket);
+
+      tag.enroll();
+    </script>
+  </body>
+</html>
