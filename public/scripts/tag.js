@@ -78,19 +78,27 @@ $.extend(Tag.prototype, {
     });
 
     this.socket.on('player unenroll', function (_id) {
-      delete thisTag.players[_id];
+      if (thisTag.players[_id]) {
+        delete thisTag.players[_id];
+      };
     });
 
     this.socket.on('player isit', function (_id) {
-      thisTag.players[_id].setIt(true);
+      if (thisTag.players[_id]) {
+        thisTag.players[_id].setIt(true);
+      };
     });
 
     this.socket.on('player isnotit', function (_id) {
-      thisTag.players[_id].setIt(false);
+      if (thisTag.players[_id]) {
+        thisTag.players[_id].setIt(false);
+      };
     });
 
     this.socket.on('player isout', function (_id) {
-      thisTag.players[_id].setOut(true);
+      if (thisTag.players[_id]) {
+        thisTag.players[_id].setOut(true);
+      };
     });
   },
 
