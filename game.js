@@ -1,3 +1,6 @@
+var players = {};
+var currentItID;
+
 var express = require('express');
 var app = express();
 
@@ -6,8 +9,10 @@ app.use(express.static(__dirname + '/public'));
 
 var io = require('socket.io')(http);
 
-var players = {};
-var currentItID;
+io.configure(function () {
+  io.set("transports", ["xhr-polling"]);
+  io.set("polling duration", 20);
+});
 
 io.on('connection', function(socket) {
   socket.on('player list', function () {
