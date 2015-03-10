@@ -9,7 +9,7 @@ var io = require('socket.io')(server, {
   'polling duration': 10
 });
 
-app.set('port', (process.env.port || 3000));
+app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/public'));
 
 server.listen(app.get('port'), function() {
