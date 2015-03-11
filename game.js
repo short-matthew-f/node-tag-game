@@ -7,7 +7,12 @@ var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server, {
   'transports': [
-    'websocket'
+    'websocket',
+    'flashsocket',
+    'htmlfile',
+    'xhr-polling',
+    'jsonp-polling',
+    'polling'
   ],
   'polling': 10
 });
